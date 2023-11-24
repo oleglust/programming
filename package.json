@@ -7,5 +7,18 @@
     "nodemon": "^3.0.1",
     "sequelize": "^6.35.1",
     "sqlite3": "^5.1.6"
-  }
+  },
+  "name": "programming",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "nodemon ./SEcretSanta_bot/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
