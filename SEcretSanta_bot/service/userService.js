@@ -1,18 +1,27 @@
 const { User } = require("../entity/user");
 
 class UserService {
-  async createUser(userId, username) {
-    try {
-      const newUser = await User.create({
-        tgId: userId,
-        username: username,
+  async createUserMiddleware(ctx,next){
+    
+      const telegramUser = ctx.update.message.from;
+  
+      const [user, created] = await User.findOrCreate({
+        where: { tgUserId: telegramUser.id },
+        defaults: {
+          isBot: telegramUser.is_bot,
+          tgUserId: telegramUser.id,
+          username: telegramUser.username,
+          languageCode: telegramUser.language_code,
+        },
       });
-      return newUser;
-    } catch (error) {
-      console.log(error);
+  
+      //TODO: notice User in session
+      ctx.session.localUser = user.dataValues;
+      ctx.session.isNew = created;
+  
+      await next();
     }
-  };
-}
+  }
 
 class FillWish {
   async fillUserWish(wish) {
