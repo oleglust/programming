@@ -6,7 +6,7 @@ class PartyService {
       const newParty = await Party.create({
         creatorId: userId,
         deadline: deadline,
-        ishide: ishide,
+        isHide: isHide,
         price: price,
         pass: pass
 

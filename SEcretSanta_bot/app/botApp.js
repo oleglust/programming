@@ -2,12 +2,16 @@ const { Bot, session, GrammyError, HttpError } = require("grammy");
 const {PartyService}=require("../service/partyService")
 const {UserService}=require("../service/userService")
 const { dbManager } = require("../db");
+const { RouteController, ROUTES } = require("../routes");
+
 
 class BotApp {
     constructor(token) {
       this.bot = new Bot(token);
       this.userService = new UserService();
-      this.PartyService = new PartyService();
+      this.partyService = new PartyService();
+      this.routeController = new RouteController();
+
     }
   
     async initDb() {
@@ -47,6 +51,7 @@ class BotApp {
         session({
           initial: () => ({
             localUser: null, // сюда будем записывать пользователя, записанного в БД. все данные.
+            step: ROUTES.start,
             createPartySteps: {
               creatorId: undefined,
               deadline: undefined,
@@ -60,6 +65,8 @@ class BotApp {
       ); // подключение session(нужна для сохранения состояния данных/запросов при общении с юзером) в {} прописываются параметры сессии.
   
       this.bot.use(this.userService.createUserMiddleware);
+      this.bot.use(this.routeController.router);
+
   
       this.bot.start();
   

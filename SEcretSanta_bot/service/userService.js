@@ -8,10 +8,8 @@ class UserService {
       const [user, created] = await User.findOrCreate({
         where: { tgUserId: telegramUser.id },
         defaults: {
-          isBot: telegramUser.is_bot,
           tgUserId: telegramUser.id,
           username: telegramUser.username,
-          languageCode: telegramUser.language_code,
         },
       });
   

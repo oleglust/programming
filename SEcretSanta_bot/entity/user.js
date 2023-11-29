@@ -13,7 +13,7 @@ class User extends Model {
 User.init(
     {
         id: {type: DataTypes.INTEGER, autoincrement: true, primaryKey: true},
-        tgId: {type: DataTypes.STRING},
+        tgUserId: {type: DataTypes.STRING},
         username: {type: DataTypes.STRING, allowNull: true},
         isAdmin: {type: DataTypes.BOOLEAN, defaultValue: false},
         wish: {type: DataTypes.STRING, allowNull: true},
