@@ -1,7 +1,7 @@
 const { Party } = require("../entity/party");
 
 class PartyService {
-  async createParty(userId, deadline, ishide, price, pass) {
+  async createParty(userId, deadline, isHide, price, pass) {
     try {
       const newParty = await Party.create({
         creatorId: userId,

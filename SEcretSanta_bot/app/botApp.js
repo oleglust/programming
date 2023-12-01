@@ -55,7 +55,7 @@ class BotApp {
             createPartySteps: {
               creatorId: undefined,
               deadline: undefined,
-              ishide: undefined,
+              isHide: undefined,
               price: undefined,
               pass: undefined,
             },

@@ -15,7 +15,7 @@ class StartController {
         ctx.session.step = ROUTES.party;
           keyboardG.row();
           keyboardG.text("вступить в вечеринку по коду");
-          ctx.session.step = ROUTES.user;
+          // ctx.session.step = ROUTES.user;
           keyboardG.resized();
       ctx.reply("Выберите опцию:", {
         reply_markup: keyboardG,

@@ -15,7 +15,7 @@ Party.init(
         id: {type: DataTypes.INTEGER, autoincrement: true, primaryKey: true},
         creatorId: {type: DataTypes.STRING, allowNull: false},
         deadline: {type: DataTypes.STRING, allowNull: true},
-        ishide: {type: DataTypes.BOOLEAN, allowNull:true},
+        isHide: {type: DataTypes.BOOLEAN, allowNull:true},
         price: {type: DataTypes.STRING},
         pass: {type:DataTypes.STRING},
     },
