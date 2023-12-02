@@ -11,31 +11,40 @@ class StartController {
       const keyboardG = new Keyboard();
       ctx.reply("Привет,в этом боте ты можешь создать или вступить в уже готовую вечеринку");
       
-        keyboardG.text("Создать вечеринку");
-        // ctx.session.step = ROUTES.party;
-          keyboardG.row();
-          keyboardG.text("вступить в вечеринку по коду");
+        keyboardG.text("Погнали!", "party");
           //РАЗОБРАТЬСЯ!
           // ctx.session.step = ROUTES.user;
           keyboardG.resized();
-      ctx.reply("Выберите опцию:", {
+      ctx.reply("погнали?", {
         reply_markup: keyboardG,
         
       });
         
-      });
+    });
 
-      this.route.callbackQuery("Создать вечеринку", async (ctx) => {
-        await ctx.answerCallbackQuery({
-          ctx.session.step = ROUTES.party
-        });
-      });
-  //     this.route.callbackQuery("Создать вечеринку",  async (ctx) => { 
-  //  ctx.session.step = ROUTES.party;
-  //       });
-  //     this.route.hears("вступить в вечеринку по коду",  async (ctx) => { 
-  //  ctx.session.step = ROUTES.user;
-  //       });
+    this.route.on("message", async (ctx) => {
+      const keyboardG = new Keyboard();
+
+      const text = ctx.message.text;
+      keyboardG.text("Создать вечеринку");
+      keyboardG.row();
+      keyboardG.text("вступить в вечеринку по коду");
+      keyboardG.resized();
+  ctx.reply("Выберите опцию:", {
+    reply_markup: keyboardG,
+    
+  });
+      if(text === "Создать вечеринку") {
+        ctx.session.step = ROUTES.party;
+        return
+      }
+
+      
+      if(text === "вступить в вечеринку по коду") {
+        ctx.session.step = ROUTES.user;
+      }
+    
+    });
    };
       
     };
