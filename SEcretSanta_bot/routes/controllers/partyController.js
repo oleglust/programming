@@ -9,7 +9,9 @@ class PartyController {
     this.route.on("message", async (ctx) => {
       if (ctx.session.createPartySteps.creatorId === undefined) {
         ctx.session.createPartySteps.creatorId = ctx.session.localUser.tgUserId;
-        return ctx.reply("Для начала, укажи дату дедлайна" )
+        return ctx.reply("Для начала, укажи дату дедлайна", {
+          reply_markup: { remove_keyboard: true },
+        } )
       }
 
       if (ctx.session.createPartySteps.deadline === undefined){ 

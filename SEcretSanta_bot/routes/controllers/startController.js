@@ -12,19 +12,34 @@ class StartController {
       ctx.reply("Привет,в этом боте ты можешь создать или вступить в уже готовую вечеринку");
       
         keyboardG.text("Создать вечеринку");
-        ctx.session.step = ROUTES.party;
+        // ctx.session.step = ROUTES.party;
           keyboardG.row();
           keyboardG.text("вступить в вечеринку по коду");
+          //РАЗОБРАТЬСЯ!
           // ctx.session.step = ROUTES.user;
           keyboardG.resized();
       ctx.reply("Выберите опцию:", {
         reply_markup: keyboardG,
+        
       });
         
       });
+
+      this.route.callbackQuery("Создать вечеринку", async (ctx) => {
+        await ctx.answerCallbackQuery({
+          ctx.session.step = ROUTES.party
+        });
+      });
+  //     this.route.callbackQuery("Создать вечеринку",  async (ctx) => { 
+  //  ctx.session.step = ROUTES.party;
+  //       });
+  //     this.route.hears("вступить в вечеринку по коду",  async (ctx) => { 
+  //  ctx.session.step = ROUTES.user;
+  //       });
+   };
       
     };
-  }
+  
 
 
 module.exports = { StartController };
