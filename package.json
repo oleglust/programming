@@ -16,7 +16,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "nodemon ./SEcretSanta_bot/index.js"
+    "start": "nodemon ./src/index.js"
   },
   "author": "",
   "license": "ISC",
