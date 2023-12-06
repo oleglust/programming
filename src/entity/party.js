@@ -5,7 +5,7 @@ const{Model}=require("sequelize");
 
 class Party extends Model {
     static associate(models) {
-        models.Party.hasMany(models.User);
+        // models.Party.hasMany(models.User);
         models.Party.belongsTo(models.User);//не уверен
     }
 }

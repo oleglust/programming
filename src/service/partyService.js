@@ -16,6 +16,15 @@ class PartyService {
       console.log(error);
     }
   };
+
+  async findParty(hash){
+    const chosenParty = await Party.findOne({ where: { pass: hash}})
+    if (chosenParty !== null) {
+      // console.log(chosenParty instanceof Party); // true
+      // console.log(chosenParty.id); // 'My Title'
+      return chosenParty
+    } 
+  }
 }
 
 module.exports = { PartyService };
