@@ -4,6 +4,8 @@ const {UserService}=require("../service/userService")
 const { dbManager } = require("../db");
 const crypto = require('crypto');
 const currentDate = new Date();
+const shuffle = require('shuffle-array')
+const _ = require("lodash");
 
 const variants = {
   new: {text: "Создать новую вечеринку", value: "party_new"},
@@ -22,6 +24,14 @@ function generatekeyboard_isHide() {
     startKeyboard
     .text("скрыть","true")
     .text("не скрывать", "false")
+  return startKeyboard;
+}
+
+function generatekeyboard_shuffle() {
+  const startKeyboard = new InlineKeyboard()
+    startKeyboard
+    .text("перемешать","shuffle_users")
+    .text("Разостать сообщения","send_messages")
   return startKeyboard;
 }
 
@@ -61,7 +71,7 @@ class BotApp {
       });
 
       dbManager.sync({
-        force: true,
+        force: false,
       });
     } catch (error) {
       console.error("Unable to connect to the database:", error);
@@ -75,6 +85,8 @@ class BotApp {
           variant: null,
           chosenParty: null,
           messageId: null,
+          wish: null,
+          isAdmin: null,
           createPartySteps: {
             creatorId: null,
             deadline: null,
@@ -114,7 +126,7 @@ class BotApp {
       } )
     })
   }
-
+  
   async listeners() {
     this.bot.on('callback_query:data', async (ctx) => {
       const variant = ctx.callbackQuery.data;
@@ -122,6 +134,26 @@ class BotApp {
       if (variant === 'party_enter') {
         await ctx.reply("введите код:");
       }
+ 
+
+      if(variant === 'shuffle_users'){
+
+       
+        
+        await  this.userService.fillTargetId()
+        // таргетайди принимает одно и то же значение для всех
+
+        await ctx.reply("готово");
+
+        await ctx.answerCallbackQuery();
+        return;
+      }
+//_!_!_!_!_!__!_!_!_!_!__
+      if(variant === 'send_messages'){
+
+        this.sendMessages();
+      }
+      
 
       if(variant === 'party_new'){
         ctx.session.createPartySteps.creatorId = ctx.session.localUser.id;
@@ -166,29 +198,37 @@ class BotApp {
         ctx.session.createPartySteps.pass = hashKey
         console.log(hashKey);
         console.log(ctx.session.createPartySteps)
-        await ctx.reply(`Вечеринка готова, пароль: ${hashKey}`)
+        await ctx.reply(`Праздник вот-вот наступит, вот ключ:${hashKey}`)
         this.partyService.createParty(ctx.session.createPartySteps.creatorId, ctx.session.createPartySteps.deadline, ctx.session.createPartySteps.isHide, ctx.session.createPartySteps.price, ctx.session.createPartySteps.pass)
            
        }
 
+      if(await this.partyService.findParty(ctx.message.text) !== undefined){
+        
+        const party = await this.partyService.findParty(ctx.message.text);
+        ctx.session.chosenParty = party
+        if (ctx.session.chosenParty.creatorId == ctx.session.localUser.id) {
+          ctx.reply("перемешать пользователей",
+            {
+            reply_markup: generatekeyboard_shuffle()
+          })
+        } else {
+          ctx.session.wish = "wait"
+        ctx.session.messageId = ctx.message.message_id
 
-       if(  ctx.message.message_id === ctx.session.messageId+1){
+        await ctx.reply("введите свое желание максимально точно и развернуто. Пишите так, будто обращаетесь к настоящему Деду Морозу")
+        }
+
+        
+        return
+      }
+
+
+      if(  ctx.session.wish != null ){
         ctx.session.chosenParty.wish = ctx.message.text
         await this.userService.createUser(ctx)
         
          
-      }
-
-      if(await this.partyService.findParty(ctx.message.text) !== undefined){
-        // console.log(await this.partyService.findParty(ctx.message.text))
-        ctx.session.chosenParty = this.partyService.findParty(ctx.message.text);
-        ctx.session.chosenParty.wish = "wait"
-        ctx.session.messageId = ctx.message.message_id
-
-        console.log(typeof(ctx.message.message_id))
-        console.log(ctx.session.messageId+1)
-        await ctx.reply("введите свое желание максимально точно и развернуто. Пишите так, будто обращаетесь к настоящему Деду Морозу")
-        
       }
       
 
@@ -199,6 +239,17 @@ class BotApp {
 
     })
 
+  }
+
+  async sendMessages(){
+    const participantsIds = await this.userService.getUserIds();
+        console.log(participantsIds)
+
+        
+        participantsIds.forEach(async (item)=> await this.bot.api.sendMessage(await this.userService.getTgId(item), `Привет, ты исполняешь желание замечательного человека, под именем ${await this.userService.getUserName(item)}, a вот желание, которое тебе предстоит исполнить: ${await this.userService.getUserWish(item)}`));
+        
+
+    
   }
 }
 

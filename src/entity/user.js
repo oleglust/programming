@@ -5,8 +5,8 @@ const{Model}=require("sequelize")
 
 class User extends Model {
     static associate(models) {
-        // models.User.belongsTo(models.Party);
-        models.User.hasOne(models.Party);
+        models.User.belongsTo(models.Party);
+       
     }
 }
 
@@ -16,6 +16,9 @@ User.init(
         tgUserId: {type: DataTypes.STRING},
         username: {type: DataTypes.STRING, allowNull: true},
         wish: {type: DataTypes.STRING, allowNull: true},
+        targetId: {type: DataTypes.INTEGER, allowNull:true},
+        targetWish: {type: DataTypes.STRING, allowNull:true},
+        targetUsername: {type: DataTypes.STRING, allowNull:true}
     },
     {
     sequelize: dbManager,

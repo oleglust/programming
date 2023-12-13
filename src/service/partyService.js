@@ -21,7 +21,7 @@ class PartyService {
     const chosenParty = await Party.findOne({ where: { pass: hash}})
     if (chosenParty !== null) {
       // console.log(chosenParty instanceof Party); // true
-      // console.log(chosenParty.id); // 'My Title'
+      // console.log(chosenParty); // 'My Title'
       return chosenParty
     } 
   }
